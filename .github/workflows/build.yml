@@ -1,0 +1,103 @@
+name: Build Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  # ---------- awtf 库：wheel + sdist ----------
+  awtf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade pip build
+
+      - name: Build awtf (wheel + sdist)
+        working-directory: awtf
+        run: python -m build
+
+      - name: Upload awtf artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: awtf-dist
+          path: awtf/dist/*
+          if-no-files-found: error
+
+  # ---------- Windows：exe + Inno Setup 安装包 ----------
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller PySide6 PyYAML psutil mysql-connector-python bcrypt
+
+      - name: Install Inno Setup
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
+        with:
+          path: inno-setup
+
+      - name: Build Windows (onedir + onefile)
+        shell: pwsh
+        run: |
+          python -m PyInstaller --noconfirm --clean AovowWorkstation.spec
+          python -m PyInstaller --noconfirm --clean AovowWorkstation_onefile.spec
+
+      - name: Compile installer (Inno Setup)
+        shell: pwsh
+        run: |
+          & "inno-setup\ISCC.exe" AovowWorkstation.iss
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            installer/*.exe
+            dist/AovowWorkstation.exe
+            dist/AovowWorkstation/
+          if-no-files-found: error
+
+  # ---------- Linux：可执行程序 ----------
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller PySide6 PyYAML psutil mysql-connector-python bcrypt
+
+      - name: Build Linux (onedir)
+        run: python -m PyInstaller --noconfirm --clean AovowWorkstation.spec
+
+      - name: Package as tarball
+        run: |
+          cd dist
+          tar -czf AovowWorkstation-linux-x64.tar.gz AovowWorkstation
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-binary
+          path: dist/AovowWorkstation-linux-x64.tar.gz
+          if-no-files-found: error

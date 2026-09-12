@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "awtf"
+version = "1.0.0"
+description = "AWTF (A Work Tool Framework)：用 Python 代码设计、搭建自己的工具与程序的框架——注册系统、参数校验、配置、日志、错误处理与 CLI 一站式提供"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Aovow" }]
+keywords = ["tools", "cli", "framework", "automation", "plugin"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = []  # 核心功能零第三方依赖
+
+[project.optional-dependencies]
+yaml = ["pyyaml>=6.0"]
+dev = ["pytest>=7.0", "pyyaml>=6.0"]
+
+[project.scripts]
+awtf = "awtf.cli:main"
+
+[project.entry-points."awtf.tools"]
+# 第三方包可在此声明工具自动发现入口，指向返回 Tool/ToolRegistry/可迭代的工厂函数
+# my_tools = "my_pkg.tools:register_tools"
+
+[tool.setuptools]
+packages = ["awtf"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q"

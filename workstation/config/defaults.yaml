@@ -1,0 +1,43 @@
+# Aovow Workstation 默认配置
+# 此文件随框架分发，用户配置会覆盖此文件中的值
+
+app:
+  name: "Aovow Workstation"
+  version: "1.0.0"
+  language: "zh_CN"
+
+appearance:
+  theme: "dark"              # 主题: dark | light
+  primary_color: "#4A90D9"   # 主色调
+  accent_color: "#6C5CE7"    # 强调色
+  font_size: 10              # 基础字体大小
+  sidebar_width: 240         # 侧边栏宽度（像素）
+  sidebar_collapsed: false   # 侧边栏默认是否收起
+
+window:
+  width: 1280
+  height: 800
+  min_width: 900
+  min_height: 600
+  maximized: false
+  remember_geometry: true    # 记住窗口位置和大小
+
+animation:
+  enabled: true              # 是否启用动画
+  duration: 250              # 默认动画时长(ms)
+  sidebar_duration: 200      # 侧边栏动画时长(ms)
+  page_transition_duration: 300  # 页面切换动画时长(ms)
+
+performance:
+  lazy_loading: true         # 启用懒加载
+  thread_pool_size: 0        # 线程池大小，0=自动
+  process_pool_size: 0       # 进程池大小，0=自动
+  memory_monitor_interval: 3000  # 性能监控间隔(ms)
+  fps_monitor_enabled: false # 是否启用 FPS 监控
+
+logging:
+  level: "INFO"              # 日志级别
+  file_enabled: true
+  file_path: ""              # 空=使用默认路径
+  max_file_size_mb: 10
+  backup_count: 3

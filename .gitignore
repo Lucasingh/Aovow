@@ -1,0 +1,70 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ===== 虚拟环境 =====
+venv/
+.venv/
+env/
+ENV/
+
+# ===== IDE / 编辑器 =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 日志 / 缓存 =====
+*.log
+logs/
+.cache/
+
+# ===== 构建产物 =====
+dist/
+build/
+installer/
+*.spec
+*.iss
+.innosetup-setup.exe
+.innosetup/
+.trae/
+
+# ===== 敏感信息（切勿提交） =====
+# API Key、密码、令牌等必须放在家目录 ~/.aovow/ 或环境变量中，
+# 不得写入项目目录。以下规则作为兜底防线，防止误提交。
+.env
+.env.*
+*.secret
+secrets.yaml
+*.local.yaml
+*_secret.*
+credentials*.json
+*_api_key.*
+
+# ===== 临时测试脚本 =====
+_test_*.py
+tmp_*.py

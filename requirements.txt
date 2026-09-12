@@ -1,0 +1,14 @@
+# Aovow Workstation 依赖
+
+# 核心 UI 框架
+PySide6>=6.5.0
+
+# 配置管理
+PyYAML>=6.0
+
+# 性能监控
+psutil>=5.9.0
+
+# 认证系统
+mysql-connector-python>=8.0
+bcrypt>=4.0
