@@ -16,6 +16,12 @@ PROJECT_ROOT = Path(__file__).parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+# 确保 awtf 真包可导入（editable finder 排在 PathFinder 之后，
+# 会被 cwd 的 namespace 包 c:\Aovow\awtf 抢占，显式引导真包父目录）
+_AWTF_ROOT = PROJECT_ROOT / "awtf"
+if _AWTF_ROOT.is_dir() and str(_AWTF_ROOT) not in sys.path:
+    sys.path.insert(0, str(_AWTF_ROOT))
+
 
 def setup_logging(level: str = "INFO"):
     """配置日志系统"""

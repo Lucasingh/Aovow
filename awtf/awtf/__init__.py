@@ -32,7 +32,7 @@ awtf —— 用 Python 代码快速构建自定义工具的库。
 
 from __future__ import annotations
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 # 参数系统
 from .parameters import Parameter, ParameterSet, infer_parameters
@@ -66,6 +66,12 @@ from .logging_utils import setup_logging, get_tool_logger, LogCapture
 
 # 脚手架
 from .templates import scaffold, render_tool_file, render_readme
+
+# 系统信息获取（sysinfo）
+from . import sysinfo
+
+# UI 设计组件库（ui）
+from . import ui
 
 __all__ = [
     # 版本
@@ -106,4 +112,7 @@ __all__ = [
     "scaffold",
     "render_tool_file",
     "render_readme",
+    # 扩展模块
+    "sysinfo",
+    "ui",
 ]

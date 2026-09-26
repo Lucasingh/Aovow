@@ -45,6 +45,9 @@ class SignalBus(QObject):
     tool_registered = Signal(str)
     """工具注册通知，携带 tool_id"""
 
+    designer_tool_created = Signal(str)
+    """设计器生成的新工具，携带 tool_id（application 收到后动态注册）"""
+
     tool_activated = Signal(str)
     """工具被激活，携带 tool_id"""
 

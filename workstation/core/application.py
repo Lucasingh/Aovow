@@ -131,13 +131,74 @@ class Application:
         # 注册内置工具
         from workstation.tools.login_tool import LoginTool
         from workstation.tools.tutorial_tool import TutorialTool
+        from workstation.tools.hello_world_tool import HelloWorldTool
+        from workstation.tools.perf_monitor_tool import PerfMonitorTool
+        from workstation.tools.deepseek_chat_tool import DeepSeekChatTool
+        from workstation.tools.tool_designer_tool import ToolDesignerTool
 
         self.tool_registry.register(LoginTool)
         self.tool_registry.register(TutorialTool)
+        self.tool_registry.register(HelloWorldTool)
+        self.tool_registry.register(PerfMonitorTool)
+        self.tool_registry.register(DeepSeekChatTool)
+        self.tool_registry.register(ToolDesignerTool)
 
         # 通知侧边栏刷新
         self.signals.tool_registered.emit(LoginTool.tool_id)
         self.signals.tool_registered.emit(TutorialTool.tool_id)
+        self.signals.tool_registered.emit(HelloWorldTool.tool_id)
+        self.signals.tool_registered.emit(PerfMonitorTool.tool_id)
+        self.signals.tool_registered.emit(DeepSeekChatTool.tool_id)
+        self.signals.tool_registered.emit(ToolDesignerTool.tool_id)
+
+        # 设计器生成的工具：启动时加载已有 + 运行时监听新工具
+        self.signals.designer_tool_created.connect(self._register_designer_tool)
+        self._load_designer_tools()
+
+    def _load_designer_tools(self):
+        """启动时加载设计器生成的工具（workstation/designer_tools/*.py）。"""
+        from pathlib import Path
+        from workstation.tools.tool_designer_tool import DESIGNER_DIR, camel_class
+        import importlib.util
+
+        DESIGNER_DIR.mkdir(parents=True, exist_ok=True)
+        for f in sorted(DESIGNER_DIR.glob("*.py")):
+            if f.name.startswith("_"):
+                continue
+            try:
+                mod_name = f"designer_tools.{f.stem}"
+                spec = importlib.util.spec_from_file_location(mod_name, f)
+                mod = importlib.util.module_from_spec(spec)
+                sys.modules[mod_name] = mod
+                spec.loader.exec_module(mod)
+                cls = getattr(mod, camel_class(f.stem))
+                self.tool_registry.register(cls)
+                self.signals.tool_registered.emit(cls.tool_id)
+            except Exception as e:  # noqa: BLE001 —— 单个工具失败不影响启动
+                logger.warning("设计器工具加载失败 %s: %s", f.name, e)
+
+    def _register_designer_tool(self, tool_id: str):
+        """运行时收到 designer_tool_created 信号后动态注册单个工具。"""
+        from pathlib import Path
+        from workstation.tools.tool_designer_tool import DESIGNER_DIR, camel_class
+        import importlib.util
+
+        f = DESIGNER_DIR / f"{tool_id}.py"
+        if not f.exists():
+            logger.warning("设计器工具文件不存在: %s", f)
+            return
+        try:
+            mod_name = f"designer_tools.{tool_id}"
+            spec = importlib.util.spec_from_file_location(mod_name, f)
+            mod = importlib.util.module_from_spec(spec)
+            sys.modules[mod_name] = mod
+            spec.loader.exec_module(mod)
+            cls = getattr(mod, camel_class(tool_id))
+            self.tool_registry.register(cls)
+            self.signals.tool_registered.emit(cls.tool_id)
+            logger.info("设计器工具已注册: %s", tool_id)
+        except Exception as e:  # noqa: BLE001 —— 展示给用户而非崩溃
+            logger.warning("设计器工具注册失败 %s: %s", tool_id, e)
 
     def _init_ui(self):
         """延迟加载并显示主窗口"""

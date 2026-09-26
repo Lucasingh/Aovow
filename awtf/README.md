@@ -26,7 +26,9 @@
 - 📝 **日志**：按工具命名的 logger，可选执行期日志捕获写入结果
 - 🔍 **自动发现**：目录扫描、模块导入、setuptools entry points
 - 🖥️ **CLI 开箱即用**：`list / info / run / new（脚手架）/ docs / doctor`
-- 📚 **文档与测试**：Markdown 文档自动生成，94 个单元测试覆盖全链路
+- 💻 **系统信息采集（sysinfo）**：CPU/内存/磁盘/操作系统/网络/运行时一键获取，psutil 可选增强，JSON 安全输出
+- 🧩 **跨平台 UI 组件库（ui）**：按钮/输入框/卡片/列表/表格/对话框/进度条/Toast，纯数据描述 + tkinter 渲染，零第三方依赖
+- 📚 **文档与测试**：Markdown 文档自动生成，148 个单元测试覆盖全链路（含 UI 验证逻辑与渲染构造）
 - 🪶 **零依赖**：核心功能仅用 Python 标准库（YAML 支持为可选）
 
 ## 30 秒上手
@@ -111,10 +113,13 @@ awtf/
 │   ├── base.py          # ToolBase/FunctionTool/@tool
 │   ├── registry.py      # ToolRegistry：注册/发现/执行
 │   ├── templates.py     # 脚手架模板
-│   └── cli.py           # 命令行
-├── examples/            # 文本工具/文件整理(类工具)/异步工具 示例
-├── tests/               # 94 个 pytest 用例
-└── docs/                # 使用指南 / quickstart / 开发指南 / API 参考
+│   ├── cli.py           # 命令行
+│   ├── sysinfo/         # 系统信息采集（hardware/osinfo/network/runtime）
+│   ├── ai/              # 大模型对话（deepseek：stream_chat/chat/@tool deepseek_ask）
+│   └── ui/              # UI 组件库（core/widgets/containers/dialogs/feedback + tk_backend）
+├── examples/            # 文本工具/文件整理(类工具)/异步工具/sysinfo/ui_demo/DeepSeek 流式对话 示例
+├── tests/               # 161 个 pytest 用例（含 sysinfo、AI 与 UI 测试）
+└── docs/                # 使用指南 / quickstart / 开发指南 / API 参考 / sysinfo / ui
 ```
 
 ## 文档
@@ -123,6 +128,8 @@ awtf/
 - [快速开始](docs/quickstart.md)
 - [工具开发指南](docs/authoring_guide.md)
 - [API 参考](docs/api_reference.md)
+- [💻 sysinfo 系统信息模块 API](docs/sysinfo_api.md)
+- [🧩 UI 组件库指南](docs/ui_guide.md)
 
 ## 运行测试
 
